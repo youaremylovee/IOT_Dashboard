@@ -1,0 +1,665 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>IOT Dashboard</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+          name="viewport" />
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet"
+          href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="~/bower_components/font-awesome/css/font-awesome.min.css" />
+    <!-- Ionicons -->
+    <link rel="stylesheet"
+          href="~/bower_components/Ionicons/css/ionicons.min.css" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/AdminLTE.min.css" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="~/dist/css/skins/_all-skins.min.css" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="~/index2.html" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>I</b>OT</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>IOT</b>Dashboard</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#"
+                   class="sidebar-toggle"
+                   data-toggle="push-menu"
+                   role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="~/mpu.png"
+                             class="img-circle icon3d"
+                             alt="User Image"
+                             style="max-width: 45px; max-height: 45px;"/>
+                    </div>
+                    <div class="pull-left info">
+                        <p>MPU-6050</p>
+                        <a href="#" class="status_app">
+                            <i class="fa fa-circle text-success"></i> Online
+                        </a>
+                    </div>
+                </div>
+                <!-- search form -->
+                <form action="#" method="get" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text"
+                               name="q"
+                               class="form-control"
+                               placeholder="Search..." />
+                        <span class="input-group-btn">
+                            <button type="submit"
+                                    name="search"
+                                    id="search-btn"
+                                    class="btn btn-flat">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu" data-widget="tree">
+                    <li class="header">Công cụ</li>
+                    <li>
+                        <a asp-action="Index">
+                            <i class="fa fa-table"></i> <span>Dữ liệu</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a asp-action="Dashboard">
+                            <i class="fa fa-pie-chart"></i> <span>Biểu đồ</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Biểu đồ dữ liệu Real-Time MPU6050
+                </h1>
+                <p style="margin: 20px 0;font-size:32px;">
+                    Trạng thái: 
+                    <b class="statusNow btn btn-info" style="padding: 0 20px;font-size:32px;">Unknown</b>
+                </p>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="/"><i class="fa fa-dashboard"></i> Trang chủ</a>
+                    </li>
+                    <li class="active"><a asp-action="Dashboard">Biểu đồ</a></li>
+                </ol>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- interactive chart -->
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+
+                                <h3 class="box-title">Dữ liệu Acceleration</h3>
+                            </div>
+                            <div class="box-body">
+                                <div id="interactive" style="height: 300px"></div>
+                            </div>
+                            <!-- /.box-body-->
+                        </div>
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+
+                                <h3 class="box-title">Dữ liệu XYZ Accleration</h3>
+                            </div>
+                            <div class="box-body">
+                                <div id="accChart" style="height: 300px"></div>
+                            </div>
+                            <!-- /.box-body-->
+                        </div>
+                        <!-- interactive chart -->
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+
+                                <h3 class="box-title">Dữ liệu Gyro</h3>
+                            </div>
+                            <div class="box-body">
+                                <div id="gyrochart" style="height: 300px"></div>
+                            </div>
+                            <!-- /.box-body-->
+                        </div>
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <i class="fa fa-bar-chart-o"></i>
+
+                                <h3 class="box-title">Dữ liệu XYZ Gyro</h3>
+                            </div>
+                            <div class="box-body">
+                                <div id="gyroXYZChart" style="height: 300px"></div>
+                            </div>
+                            <!-- /.box-body-->
+                        </div>
+                        <!-- /.box -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <!-- /.row -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Create the tabs -->
+            <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+                <li>
+                    <a href="#control-sidebar-home-tab" data-toggle="tab">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="#control-sidebar-settings-tab" data-toggle="tab">
+                        <i class="fa fa-gears"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <!-- Home tab content -->
+                <div class="tab-pane" id="control-sidebar-home-tab">
+                    <h3 class="control-sidebar-heading">Recent Activity</h3>
+                    <ul class="control-sidebar-menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">
+                                        Langdon's Birthday
+                                    </h4>
+
+                                    <p>Will be 23 on April 24th</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="menu-icon fa fa-user bg-yellow"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">
+                                        Frodo Updated His Profile
+                                    </h4>
+
+                                    <p>New phone +1(800)555-1234</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">
+                                        Nora Joined Mailing List
+                                    </h4>
+
+                                    <p>nora@example.com</p>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <i class="menu-icon fa fa-file-code-o bg-green"></i>
+
+                                <div class="menu-info">
+                                    <h4 class="control-sidebar-subheading">
+                                        Cron Job 254 Executed
+                                    </h4>
+
+                                    <p>Execution time 5 seconds</p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.control-sidebar-menu -->
+
+                    <h3 class="control-sidebar-heading">Tasks Progress</h3>
+                    <ul class="control-sidebar-menu">
+                        <li>
+                            <a href="javascript:void(0)">
+                                <h4 class="control-sidebar-subheading">
+                                    Custom Template Design
+                                    <span class="label label-danger pull-right">70%</span>
+                                </h4>
+
+                                <div class="progress progress-xxs">
+                                    <div class="progress-bar progress-bar-danger"
+                                         style="width: 70%"></div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <h4 class="control-sidebar-subheading">
+                                    Update Resume
+                                    <span class="label label-success pull-right">95%</span>
+                                </h4>
+
+                                <div class="progress progress-xxs">
+                                    <div class="progress-bar progress-bar-success"
+                                         style="width: 95%"></div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <h4 class="control-sidebar-subheading">
+                                    Laravel Integration
+                                    <span class="label label-warning pull-right">50%</span>
+                                </h4>
+
+                                <div class="progress progress-xxs">
+                                    <div class="progress-bar progress-bar-warning"
+                                         style="width: 50%"></div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)">
+                                <h4 class="control-sidebar-subheading">
+                                    Back End Framework
+                                    <span class="label label-primary pull-right">68%</span>
+                                </h4>
+
+                                <div class="progress progress-xxs">
+                                    <div class="progress-bar progress-bar-primary"
+                                         style="width: 68%"></div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.control-sidebar-menu -->
+                </div>
+                <!-- /.tab-pane -->
+                <!-- Stats tab content -->
+                <div class="tab-pane" id="control-sidebar-stats-tab">
+                    Stats Tab Content
+                </div>
+                <!-- /.tab-pane -->
+                <!-- Settings tab content -->
+                <div class="tab-pane" id="control-sidebar-settings-tab">
+                    <form method="post">
+                        <h3 class="control-sidebar-heading">General Settings</h3>
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Report panel usage
+                                <input type="checkbox" class="pull-right" checked />
+                            </label>
+
+                            <p>Some information about this general settings option</p>
+                        </div>
+                        <!-- /.form-group -->
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Allow mail redirect
+                                <input type="checkbox" class="pull-right" checked />
+                            </label>
+
+                            <p>Other sets of options are available</p>
+                        </div>
+                        <!-- /.form-group -->
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Expose author name in posts
+                                <input type="checkbox" class="pull-right" checked />
+                            </label>
+
+                            <p>Allow the user to show his name in blog posts</p>
+                        </div>
+                        <!-- /.form-group -->
+
+                        <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Show me as online
+                                <input type="checkbox" class="pull-right" checked />
+                            </label>
+                        </div>
+                        <!-- /.form-group -->
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Turn off notifications
+                                <input type="checkbox" class="pull-right" />
+                            </label>
+                        </div>
+                        <!-- /.form-group -->
+
+                        <div class="form-group">
+                            <label class="control-sidebar-subheading">
+                                Delete chat history
+                                <a href="javascript:void(0)" class="text-red pull-right">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            </label>
+                        </div>
+                        <!-- /.form-group -->
+                    </form>
+                </div>
+                <!-- /.tab-pane -->
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery 3 -->
+    <script src="~/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="~/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/dist/js/demo.js"></script>
+    <!-- FLOT CHARTS -->
+    <script src="~/bower_components/Flot/jquery.flot.js"></script>
+    <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+    <script src="~/bower_components/Flot/jquery.flot.resize.js"></script>
+    <!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+    <script src="~/bower_components/Flot/jquery.flot.pie.js"></script>
+    <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
+    <script src="~/bower_components/Flot/jquery.flot.categories.js"></script>
+    <!-- SignalR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <!-- Time plugin -->
+    <script src="~/timeplugin.js"></script> <!-- Thêm plugin time -->
+    <!-- Page script -->
+    <script>
+        let home = "http://172.16.67.111:8888/"
+
+        $(function () {
+            var is3D = false;
+            var isOnline = false;
+
+            function setOnline(flag) {
+                let element = document.querySelector(".status_app");
+                let icon3d = document.querySelector(".icon3d");
+                if (flag) {
+                    element.innerHTML = `<i class="fa fa-circle text-success"></i> Online`;
+                    if (!is3D) {
+                        icon3d.src = home + "3d.gif";
+                        is3D = true;
+                    }
+                } else {
+                    element.innerHTML = `<i class="fa fa-circle text-danger"></i> Offline`;
+                    icon3d.src = home + "offline.png";
+                    is3D = false;
+                }
+            }
+
+            setOnline(false);
+            setInterval(() => {
+                setOnline(isOnline);
+                isOnline = false;
+            }, 3000);
+
+
+            /*
+            * Biểu đồ Acceleration
+            * ---------------------
+            */
+            var data1 = [];
+            var data2 = [];
+            var interactive_plot = $.plot(
+                "#interactive",
+                [],
+                {
+                    grid: {
+                        borderColor: "#f3f3f3",
+                        borderWidth: 1,
+                        tickColor: "#f3f3f3",
+                    },
+                    series: { shadowSize: 0 },
+                    lines: { fill: false },
+                    yaxis: { min: -20, max: 20, show: true },
+                    xaxis: {
+                        show: true,
+                        mode: "time",  // Thiết lập chế độ thời gian
+                        timeformat: "%I:%M:%S %p",  // Định dạng thời gian hh:mm:ss AM/PM
+                        minTickSize: [1, "second"],  // Kích thước tick nhỏ nhất
+                    },
+                    colors: ["#3c8dbc", "#d9534f"],
+                }
+            );
+
+            /*
+        * Biểu đồ Gyro
+        * ------------
+        */
+            var gyroData1 = [];
+            var gyroData2 = [];
+            var gyro_plot = $.plot(
+                "#gyrochart",
+                [],
+                {
+                    grid: {
+                        borderColor: "#f3f3f3",
+                        borderWidth: 1,
+                        tickColor: "#f3f3f3",
+                    },
+                    series: { shadowSize: 0 },
+                    lines: { fill: false },
+                    yaxis: { min: -3, max: 3, show: true },
+                    xaxis: {
+                        show: true,
+                        mode: "time",  // Thiết lập chế độ thời gian
+                        timeformat: "%I:%M:%S %p",  // Định dạng thời gian hh:mm:ss AM/PM
+                        minTickSize: [1, "second"],  // Kích thước tick nhỏ nhất
+                    },
+                    colors: ["#5bc0de", "#f0ad4e"],  // Màu cho gyro lines
+                }
+            );
+
+            // 4. Hàm cập nhật biểu đồ Acceleration
+            function updateAccelerationChart(newData, timeString) {
+                const point1 = [timeString, newData.gia_tri.accSD];
+                const point2 = [timeString, newData.gia_tri.averageAcc];
+
+                data1.push(point1);
+                data2.push(point2);
+
+                if (data1.length > 20) data1.shift();
+                if (data2.length > 20) data2.shift();
+
+                interactive_plot.setData([
+                    { data: data1, label: "SD Acceleration", color: "#3c8dbc" },
+                    { data: data2, label: "Mean Acceleration", color: "#d9534f" }
+                ]);
+                interactive_plot.getAxes().xaxis.options.mode = "time";  // Chế độ thời gian
+                interactive_plot.setupGrid();
+                interactive_plot.draw();
+            }
+
+            // 5. Hàm cập nhật biểu đồ Gyro
+            function updateGyroChart(newData, timeString) {
+                const point1 = [timeString, newData.gia_tri.gyroSD];
+                const point2 = [timeString, newData.gia_tri.averageRo];
+
+                gyroData1.push(point1);
+                gyroData2.push(point2);
+
+                if (gyroData1.length > 20) gyroData1.shift();
+                if (gyroData2.length > 20) gyroData2.shift();
+
+                gyro_plot.setData([
+                    { data: gyroData1, label: "SD Gyro", color: "#5bc0de" },
+                    { data: gyroData2, label: "Mean Gyro", color: "#f0ad4e" }
+                ]);
+                gyro_plot.getAxes().xaxis.options.mode = "time";  // Chế độ thời gian
+                gyro_plot.setupGrid();
+                gyro_plot.draw();
+            }
+
+
+            // Biểu đồ Acceleration XYZ
+            var accXData = [], accYData = [], accZData = [];
+            var acc_plot = $.plot("#accChart", [], {
+                grid: { borderColor: "#f3f3f3", borderWidth: 1, tickColor: "#f3f3f3" },
+                series: { shadowSize: 0 },
+                lines: { fill: false },
+                yaxis: { min: -20, max: 20, show: true },
+                xaxis: {
+                    show: true, mode: "time", timeformat: "%I:%M:%S %p", minTickSize: [1, "second"]
+                },
+                colors: ["#3c8dbc", "#d9534f", "#5bc0de"]
+            });
+
+            // Biểu đồ Gyro XYZ
+            var gyroXData = [], gyroYData = [], gyroZData = [];
+            var gyroXYZ_plot = $.plot("#gyroXYZChart", [], {
+                grid: { borderColor: "#f3f3f3", borderWidth: 1, tickColor: "#f3f3f3" },
+                series: { shadowSize: 0 },
+                lines: { fill: false },
+                yaxis: { min: -5, max: 5, show: true },
+                xaxis: {
+                    show: true, mode: "time", timeformat: "%I:%M:%S %p", minTickSize: [1, "second"]
+                },
+                colors: ["#5bc0de", "#f0ad4e", "#d9534f"]
+            });
+
+            // Kết nối SignalR
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chart")
+                .build();
+
+            connection.start()
+                .then(() => console.log("Connected to SignalR hub"))
+                .catch(err => console.error("Connection failed: ", err));
+
+            connection.on("UpdateChart", (data) => {
+                console.log("Received data: ", data);
+                const timeString = new Date(data.thoi_gian).getTime();
+
+                updateAccelerationXYZChart(data, timeString);
+                updateGyroXYZChart(data, timeString);
+
+                updateAccelerationChart(data, timeString);
+                updateGyroChart(data, timeString);
+                if(data.trang_thai != 'calculating'){
+                    document.querySelector(".statusNow").innerText = data.trang_thai;
+                }
+                isOnline = true;
+                setOnline(isOnline);
+            });
+
+            // Cập nhật biểu đồ Acceleration XYZ
+            function updateAccelerationXYZChart(newData, timeString) {
+                accXData.push([timeString, newData.gia_tri.accelerationX]);
+                accYData.push([timeString, newData.gia_tri.accelerationY]);
+                accZData.push([timeString, newData.gia_tri.accelerationZ]);
+
+                if (accXData.length > 20) accXData.shift();
+                if (accYData.length > 20) accYData.shift();
+                if (accZData.length > 20) accZData.shift();
+
+                acc_plot.setData([
+                    { data: accXData, label: "Acc X", color: "#3c8dbc" },
+                    { data: accYData, label: "Acc Y", color: "#d9534f" },
+                    { data: accZData, label: "Acc Z", color: "#5bc0de" }
+                ]);
+
+                acc_plot.setupGrid();
+                acc_plot.draw();
+            }
+
+            // Cập nhật biểu đồ Gyro XYZ
+            function updateGyroXYZChart(newData, timeString) {
+                gyroXData.push([timeString, newData.gia_tri.gyroX]);
+                gyroYData.push([timeString, newData.gia_tri.gyroY]);
+                gyroZData.push([timeString, newData.gia_tri.gyroZ]);
+
+                if (gyroXData.length > 20) gyroXData.shift();
+                if (gyroYData.length > 20) gyroYData.shift();
+                if (gyroZData.length > 20) gyroZData.shift();
+
+                gyroXYZ_plot.setData([
+                    { data: gyroXData, label: "Gyro X", color: "#5bc0de" },
+                    { data: gyroYData, label: "Gyro Y", color: "#f0ad4e" },
+                    { data: gyroZData, label: "Gyro Z", color: "#d9534f" }
+                ]);
+
+                gyroXYZ_plot.setupGrid();
+                gyroXYZ_plot.draw();
+            }
+        });
+
+
+
+        /*
+         * Custom Label formatter
+         * ----------------------
+         */
+        function labelFormatter(label, series) {
+            return (
+                '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">' +
+                label +
+                "<br>" +
+                Math.round(series.percent) +
+                "%</div>"
+            );
+        }
+    </script>
+</body>
+</html>
